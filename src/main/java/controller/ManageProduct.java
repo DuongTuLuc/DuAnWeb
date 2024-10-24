@@ -5,6 +5,7 @@
 package controller;
 
 import dao.HoaDAO;
+import dao.LoaiDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -34,7 +35,8 @@ public class ManageProduct extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         HoaDAO hoaDAO = new HoaDAO();
-
+        LoaiDAO loaiDAO= new LoaiDAO();
+        
         String action = "LIST";
         if (request.getParameter("action") != null) {
             action = request.getParameter("action");
