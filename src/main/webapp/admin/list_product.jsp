@@ -1,4 +1,6 @@
 
+<%@page import="dao.HoaDAO"%>
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="model.Hoa"%>
 <%@page import="java.util.ArrayList"%>
 <%-- 
@@ -29,12 +31,14 @@
             <th>Action</th>
         </tr>  
         <%
+            DecimalFormat fmt = new DecimalFormat("#,##0 đồng");
+            HoaDAO hoaDAO = new HoaDAO();
             ArrayList<Hoa> dsHoa = (ArrayList<Hoa>) request.getAttribute("dsHoa");
             for (Hoa x : dsHoa) {
         %>
         <tr>
             <td><%=x.getTenhoa()%></td>
-            <td><%=x.getGia()%></td>
+            <td><%=x.getGia() %></td>
             <td> <img src="assets/images/products/<%=x.getHinh()%>" style="width: 100px">  </td>
             <td><%=x.getMaloai()%></td>
             <td>

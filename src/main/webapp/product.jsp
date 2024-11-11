@@ -3,6 +3,7 @@
     Created on : Sep 15, 2023, 8:14:39 AM
     Author     : KHOACNTT
 --%>
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.Hoa"%>
 <%@page import="dao.HoaDAO"%>
@@ -30,6 +31,7 @@
                 <%
                     int maloai = request.getParameter("maloai") == null ? 1 : Integer.parseInt(request.getParameter("maloai"));
 
+                    DecimalFormat fmt = new DecimalFormat("#,##0 đồng");
                     HoaDAO hoaDAO = new HoaDAO();
                     ArrayList<Hoa> dsHoa = hoaDAO.getByCategoryId(maloai);
                     for (Hoa x : dsHoa) {
@@ -45,7 +47,7 @@
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col">
-                                    <p class="btn btn-danger btn-block"><%=x.getGia()%>đ</p>
+                                    <p class="btn btn-danger btn-block"><%=fmt.format(x.getGia()) %></p>
                                 </div>
                                 <div class="col">
                                     <a href="#" class="btn btn-success btn-block">Add to cart</a>
