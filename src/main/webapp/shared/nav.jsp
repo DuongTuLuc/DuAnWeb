@@ -1,3 +1,4 @@
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
     <div class="container">
@@ -14,27 +15,31 @@
                     <a class="nav-link" href="product.jsp">Product</a>
                 </li>  
                 <li class="nav-item">
-                    <a class="nav-link" href="ManageProduct">Management</a>
+                    <a class="nav-link" href="ManageProduct">Manage Products</a>
                 </li>
             </ul>
-            <!--hien thi welcome user--->
-            <ul class="navbar">
+            <!--Hiển thị Welcome User  -->
+            <ul class="navbar-nav">
                 <%
-                    if (session.getAttribute("username") != null) {
+                    if (session.getAttribute("username")!=null) //Lịch sử đăng nhập thành công
+                    {
                 %>
                 <li class="nav-item">
-                    <a class="nav-link"href="#">Welcome <%=session.getAttribute("username")%></a>
+                    <a class="nav-link" href="changepass.jsp">Welcome <%=session.getAttribute("username") %></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link"href="LogoutServlet">Logout</a>
+                    <a class="nav-link" href="LogoutServlet">Logout</a>
                 </li>
                 <%
-                } else {
+                    } else {
                 %>
                 <li class="nav-item">
-                    <a class="nav-link"href="login.jsp">Login</a>               
+                    <a class="nav-link" href="login.jsp">Login</a>
                 </li>
-                <%}%>
+                <%
+                    }
+                %>
+            </ul>
         </div>
     </div>
 </nav>
