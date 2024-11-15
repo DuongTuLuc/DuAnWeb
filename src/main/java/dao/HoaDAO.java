@@ -24,7 +24,7 @@ public class HoaDAO {
 
     public ArrayList<Hoa> getTop10() {
         ArrayList<Hoa> ds = new ArrayList<>();
-        String sql = "select top 10 * from Hoa order by gia asc";
+        String sql = "select top 8 * from Hoa order by tenhoa";
         conn = DbContext.getConnection();
         try {
             ps = conn.prepareStatement(sql);

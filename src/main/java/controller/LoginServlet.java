@@ -42,19 +42,17 @@ public class LoginServlet extends HttpServlet {
         TaiKhoanDAO tkDAO = new TaiKhoanDAO();
         TaiKhoan tk = tkDAO.checkLogin(username, password);
         
-        if(username.equalsIgnoreCase("") && password.equals(""))//thành công 
-                {
-            //Lưu thông tin lịch sử(tài khoản ác thực thành công)
+        if(tk!=null){//thành công
+            //lưu thông tin lịch sử (tài khoản xác thực thành công) vào session của người dùng
             HttpSession session = request.getSession();
-            session.setAttribute("username", username);
-            //Điều hướng tới trang mặc định
-            response.sendRedirect("home.jsp");          
-        }else
-        {
-            request.setAttribute("error","Đăng nhập thất bại.( Do sai tên hoặc mặt khẩu)");
-            //Chuyển tiếp về trang login
+            session.setAttribute("username", username);         
+            //điều hướng tới trang mặc định
+            response.sendRedirect("home.jsp");
+        }else{//thất bại
+            request.setAttribute("error", "Đăng nhập thất bại. (Do sai tên hoặc mật khẩu)");
+            //chuyển tiếp đến trang login
             request.getRequestDispatcher("login.jsp").forward(request, response);
-        }   
+        }  
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

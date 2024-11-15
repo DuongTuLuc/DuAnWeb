@@ -24,7 +24,7 @@ public class TaiKhoanDAO {
         TaiKhoan tk = null;
         conn = DbContext.getConnection();
         try{
-            ps = conn.prepareStatement("select * from taikhoan where tendangnhap=? and matkhau=?");
+            ps = conn.prepareStatement("select * from taikhoan where username=? and password=?");
             ps.setString(1, username);
             ps.setString(2, password);
             

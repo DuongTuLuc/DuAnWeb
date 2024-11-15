@@ -46,7 +46,7 @@ public class ManageProduct extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
         response.setContentType("text/html;charset=UTF-8");
-
+        request.setCharacterEncoding("UTF-8");
         HoaDAO hoaDAO = new HoaDAO();
         LoaiDAO loaiDAO = new LoaiDAO();
 
