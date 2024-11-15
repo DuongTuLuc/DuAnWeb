@@ -1,4 +1,5 @@
- /*
+
+/*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
@@ -22,7 +23,7 @@ import model.Hoa;
 
 /**
  *
- * @author ADMIN
+ * @author PC
  */
 @WebServlet(name = "ManageProduct", urlPatterns = {"/ManageProduct"})
 @MultipartConfig
@@ -39,74 +40,70 @@ public class ManageProduct extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //kiểm tra thông tin lịch sử đăng nhập
         HttpSession session = request.getSession();
-        if(session.getAttribute("username")==null)
-        {
+        if(session.getAttribute("username")==null){
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
-        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
 
         HoaDAO hoaDAO = new HoaDAO();
-        LoaiDAO loaiDAO= new LoaiDAO();
+        LoaiDAO loaiDAO = new LoaiDAO();
+
         String method = request.getMethod();
+
         String action = "LIST";
         if (request.getParameter("action") != null) {
             action = request.getParameter("action");
         }
-
         switch (action) {
             case "LIST":
-                //tra ve giao dien lien ket danh sach san pham quan tri
-                int pageSize=5;
-                int pageIndex=1;
-                if(request.getParameter("page") !=null)
-                {
-                    pageIndex = Integer.parseInt(request.getParameter("page"));
+                //Tra ve giao dien liet ke danh sach san pham quan tri
+                int pageSize = 5;
+                int pageIndex = 1;
+                if(request.getParameter("page")!=null){
+                    pageIndex= Integer.parseInt(request.getParameter("page"));
                 }
-                
-                //Tính tổng só trang có thể có
-                int sumOfPage = (int) Math.ceil((double)hoaDAO.getAll().size()/pageSize);
-                request.setAttribute("dsHoa", hoaDAO.getByPage(pageIndex, pageSize));
+                //tính tổng số trang có thể có
+                int sumOfPage = (int) Math.ceil((double) hoaDAO.getAll().size()/pageSize);
                 request.setAttribute("sumOfPage", sumOfPage);
-                request.setAttribute("pageIndex",pageIndex);
+                request.setAttribute("pageIndex", pageIndex);
+                
+                request.setAttribute("dsHoa", hoaDAO.getByPage(pageIndex, pageSize));
                 request.getRequestDispatcher("admin/list_product.jsp").forward(request, response);
                 break;
             case "ADD":
-                
-                if(method.equals("GET")){
-                //tra ve giao dien lien ket danh sach san pham quan tri
-                request.setAttribute("dsLoai", loaiDAO.getAll());
-                request.getRequestDispatcher("admin/add_product.jsp").forward(request, response);
-                }else if(method.equals("POST")){
+                if (method.equalsIgnoreCase("get")) {
+                    //tra ve gioa dien them moi san pham
+                    request.setAttribute("dsLoai", loaiDAO.getAll());
+                    request.getRequestDispatcher("admin/add_product.jsp").forward(request, response);
+                } else {
                     //xu ly them moi san pham
-                    //b1. Lay thong tin san pham can them
+                    //b1 Lay thong tin san pham
                     String tenhoa = request.getParameter("tenhoa");
                     double gia = Double.parseDouble(request.getParameter("gia"));
-                    Part part  = request.getPart("hinh");
-                    int maloai= Integer.parseInt(request.getParameter("maloai"));
-                    //b2. xu ly upload file (ảnh sản phẩm)
-                    String realPath = request.getServletContext().getRealPath("assets/images/products");
+                    Part part = request.getPart("hinh");
+                    int maloai = Integer.parseInt(request.getParameter("maloai"));
+
+                    //b2 Xu ly upload file
+                    String realpath = request.getServletContext().getRealPath("/assets/images/products");
                     String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
-                    part.write(realPath + "/" + filename);
-                    //b3. Them san pham vao CSDL
+                    part.write(realpath + "/" + filename);
+
+                    //3. Them san pham vao CSDL
                     Hoa objInsert = new Hoa(0, tenhoa, gia, filename, maloai, new Date(new java.util.Date().getTime()));
-                    if(hoaDAO.Insert(objInsert))
-                    {
-                        // thong bao them thanh cong
-                        request.setAttribute("success", "Thao tác thêm sản phẩm thành công");
-                    }else
-                    {
-                        // thông báo thêm thất bại
-                        request.setAttribute("error", "Thông báo thêm sản phẩm thất bại");
+                    if (hoaDAO.Insert(objInsert)) {
+                        //thong bao them thanh cong
+                        request.setAttribute("success", "Thao tac them san pham thanh cong");
+                    } else {
+                        //thong bao them that bai
+                        request.setAttribute("error", "Thao tac them san pham that bai");
                     }
-                    //chuyển tiếp người dùng về action=LIST để liệt kê lại danh sách sản phẩm
                     request.getRequestDispatcher("ManageProduct?action=LIST").forward(request, response);
                 }
                 break;
             case "EDIT":
-                
-                   //Tra ve giao dien cap nhat san pham
+                //Tra ve giao dien cap nhat san pham
                 if (method.equalsIgnoreCase("get")) {
                     int mahoa = Integer.parseInt(request.getParameter("mahoa"));
                     request.setAttribute("hoa", hoaDAO.getById(mahoa));
@@ -142,35 +139,18 @@ public class ManageProduct extends HttpServlet {
                 }
                 break;
             case "DELETE":
-                //xử lý xoá sản phẩm
-                //b1. lấy mã sản phẩm
+                //Xu ly xoa san pham
+                //b1 Lay ma san pham
                 int mahoa = Integer.parseInt(request.getParameter("mahoa"));
-                //b2. Xoa san pham khoi CSDL
-                if(hoaDAO.Delete(mahoa))
-                {
-                    //thong bao them thanh cong
-                    request.setAttribute("success","Thao tác xoá sản phẩm thành công");
-                }else
-                {
-                     // thông báo thêm thất bại
-                        request.setAttribute("error", "Thông báo thêm sản phẩm thất bại");
+                //2. Xoa san pham khoi CSDL
+                if (hoaDAO.Delete(mahoa)) {
+                    request.setAttribute("success", "Thao tac xoa san pham thanh cong");
+                } else {
+                    //thong bao them that bai
+                    request.setAttribute("error", "Thao tac xoa san pham that bai");
                 }
-                 //chuyển tiếp người dùng về action=LIST để liệt kê lại danh sách sản phẩm
-                    request.getRequestDispatcher("ManageProduct?action=LIST").forward(request, response);
+                request.getRequestDispatcher("ManageProduct?action=LIST").forward(request, response);
                 break;
-        }
-
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ManageProduct</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ManageProduct at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
         }
     }
 

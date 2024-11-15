@@ -42,7 +42,7 @@ public class LoginServlet extends HttpServlet {
         TaiKhoanDAO tkDAO = new TaiKhoanDAO();
         TaiKhoan tk = tkDAO.checkLogin(username, password);
         
-        if(username.equalsIgnoreCase("admin") && password.equals("admin"))//thành công 
+        if(username.equalsIgnoreCase("") && password.equals(""))//thành công 
                 {
             //Lưu thông tin lịch sử(tài khoản ác thực thành công)
             HttpSession session = request.getSession();
